@@ -2,7 +2,8 @@ const { default: mongoose } = require("mongoose");
 const Template = require("../schema/template.schema");
 
 async function createTemplate(req) {
-  const template = new Template({ details: req.body, createdBy: req.user.id });
+  const { details, type } = req.body;
+  const template = new Template({ details, type, createdBy: req.user.id });
   const savedTemplate = await template.save();
   return savedTemplate;
 }

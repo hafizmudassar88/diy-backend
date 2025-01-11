@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const TemplateSchema = new mongoose.Schema(
   {
-    // type: { type: String, required: true, enum: ["BLOG", "PUBLICATION"] },
+    type: { type: String, required: true, enum: ["BLOG", "RESEARCH"] },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
