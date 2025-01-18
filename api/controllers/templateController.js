@@ -45,6 +45,62 @@ class TemplateController {
       next(error);
     }
   }
+
+  // Blogs CRUD
+  static async addBlog(req, res, next) {
+    try {
+      const result = await TemplateService.addBlog(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateBlog(req, res, next) {
+    try {
+      const result = await TemplateService.updateBlog(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteBlog(req, res, next) {
+    try {
+      const result = await TemplateService.deleteBlog(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Researches CRUD
+  static async addResearch(req, res, next) {
+    try {
+      const result = await TemplateService.addResearch(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateResearch(req, res, next) {
+    try {
+      const result = await TemplateService.updateResearch(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteResearch(req, res, next) {
+    try {
+      const result = await TemplateService.deleteResearch(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = TemplateController;

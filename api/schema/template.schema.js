@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const TemplateSchema = new mongoose.Schema(
   {
-    type: { type: String, required: true, enum: ["BLOG", "RESEARCH"] },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -18,6 +17,30 @@ const TemplateSchema = new mongoose.Schema(
       type: Map,
       of: mongoose.Schema.Types.Mixed,
     },
+    blogs: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: () => new mongoose.Types.ObjectId(),
+        },
+        details: {
+          type: Map,
+          of: mongoose.Schema.Types.Mixed,
+        },
+      },
+    ],
+    researches: [
+      {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          default: () => new mongoose.Types.ObjectId(),
+        },
+        details: {
+          type: Map,
+          of: mongoose.Schema.Types.Mixed,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
