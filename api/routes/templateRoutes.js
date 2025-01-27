@@ -8,7 +8,7 @@ router.post("/create", authMiddleware, templateController.createTemplate);
 router.get("/mine", authMiddleware, templateController.getTemplatesOfMine);
 router.put("/update", authMiddleware, templateController.updateTemplate);
 router.delete("/delete", authMiddleware, templateController.deleteTemplate);
-router.get("/:templateId", authMiddleware, templateController.getTemplate);
+router.get("/:templateId", templateController.getTemplate);
 
 // Blog Routes
 router.post("/:templateId/blog/add", authMiddleware, templateController.addBlog);
