@@ -6,8 +6,11 @@ const router = express.Router();
 
 router.post("/create", authMiddleware, templateController.createTemplate);
 router.get("/mine", authMiddleware, templateController.getTemplatesOfMine);
+router.get("/all-sorted", authMiddleware, templateController.getAllTemplatesSorted);
 router.put("/update", authMiddleware, templateController.updateTemplate);
+router.put("/update/status", authMiddleware, templateController.updateTemplateStatus);
 router.delete("/delete", authMiddleware, templateController.deleteTemplate);
+router.get("/user/:userId", templateController.getTemplatesByUserId);
 router.get("/:templateId", templateController.getTemplate);
 
 // Blog Routes

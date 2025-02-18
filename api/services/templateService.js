@@ -23,6 +23,35 @@ async function getTemplate(req) {
   return templates;
 }
 
+async function getTemplatesByUserId(req) {
+  const userId = req.params.userId;
+  const templates = await Template.find({
+    createdBy: new mongoose.Types.ObjectId(userId),
+  }).sort({ createdBy: -1 })
+  return templates;
+}
+const getAllTemplatesSorted = async () => {
+  try {
+    const statusOrder = ["PENDING", "APPROVED", "CANCELLED"];
+
+    const templates = await Template.aggregate([
+      {
+        $addFields: {
+          statusOrder: {
+            $indexOfArray: [statusOrder, "$status"],
+          },
+        },
+      },
+      { $sort: { statusOrder: 1, createdAt: -1 } }, // Sort by custom order, then newest first
+      { $project: { statusOrder: 0 } }, // Remove the temporary field
+    ]);
+
+    return templates;
+  } catch (error) {
+    console.error("Error fetching templates:", error);
+    throw error;
+  }
+};
 async function updateTemplate(req) {
   const { templateId, details } = req.body;
   const updatedTemplate = await Template.findByIdAndUpdate(
@@ -30,6 +59,18 @@ async function updateTemplate(req) {
       _id: new mongoose.Types.ObjectId(templateId),
     },
     { $set: { details } },
+    { new: true }
+  );
+  return updatedTemplate;
+}
+
+async function updateTemplateStatus(req) {
+  const { status, templateId } = req.body;
+  const updatedTemplate = await Template.findByIdAndUpdate(
+    {
+      _id: new mongoose.Types.ObjectId(templateId),
+    },
+    { $set: { status } },
     { new: true }
   );
   return updatedTemplate;
@@ -132,4 +173,7 @@ module.exports = {
   addResearch,
   updateResearch,
   deleteResearch,
+  getTemplatesByUserId,
+  updateTemplateStatus,
+  getAllTemplatesSorted
 };

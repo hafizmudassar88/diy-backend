@@ -19,9 +19,27 @@ class TemplateController {
     }
   }
 
+
+  static async getTemplatesByUserId(req, res, next) {
+    try {
+      const result = await TemplateService.getTemplatesByUserId(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getTemplatesOfMine(req, res, next) {
     try {
       const result = await TemplateService.getTemplatesOfMine(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async getAllTemplatesSorted(req, res, next) {
+    try {
+      const result = await TemplateService.getAllTemplatesSorted(req);
       res.send(result);
     } catch (error) {
       next(error);
@@ -36,6 +54,15 @@ class TemplateController {
       next(error);
     }
   }
+  static async updateTemplateStatus(req, res, next) {
+    try {
+      const result = await TemplateService.updateTemplateStatus(req);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
 
   static async deleteTemplate(req, res, next) {
     try {

@@ -18,7 +18,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: "USER",
     },
-
+    is_dashboard_user: {
+      type: Boolean,
+      default: false,
+    },
     email: {
       type: String,
       required: true,
