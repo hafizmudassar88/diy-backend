@@ -9,8 +9,16 @@ const { GOOGLE_CLIENT_ID } = require("../config/environment");
 const isEmail = (input) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
 
 async function signUp(req) {
-  const { username, name, email, password } = req.body;
+  const { username, name, email, password, role } = req.body;
+  let isDashboardUser = false;
+  let userRole = "USER";
 
+
+  // Check if admin or super admin is trying to register as dashboard user
+  if (role && role === "ADMIN" || role === "SUPER_ADMIN") {
+    isDashboardUser = true;
+    userRole = role;
+  }
   // Check if user already exists
   const existingUser = await User.findOne({ $or: [{ email }, { username }] });
   if (existingUser) {
@@ -21,7 +29,7 @@ async function signUp(req) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Create new user
-  const newUser = new User({ username, name, email, password: hashedPassword });
+  const newUser = new User({ username, name, email, password: hashedPassword, role: userRole, is_dashboard_user: isDashboardUser });
   await newUser.save();
 
   return { message: "User registered successfully." };
@@ -147,7 +155,7 @@ function encrypt(text) {
   });
 }
 
-async function resetPasswordRequest(req) {}
+async function resetPasswordRequest(req) { }
 
 function decrypt(encrypted) {
   const iv = enc.Hex.parse("00000000000000000000000000000000");
