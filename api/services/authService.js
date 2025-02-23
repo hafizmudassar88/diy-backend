@@ -13,9 +13,8 @@ async function signUp(req) {
   let isDashboardUser = false;
   let userRole = "USER";
 
-
   // Check if admin or super admin is trying to register as dashboard user
-  if (role && role === "ADMIN" || role === "SUPER_ADMIN") {
+  if ((role && role === "ADMIN") || role === "SUPER_ADMIN") {
     isDashboardUser = true;
     userRole = role;
   }
@@ -29,7 +28,14 @@ async function signUp(req) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Create new user
-  const newUser = new User({ username, name, email, password: hashedPassword, role: userRole, is_dashboard_user: isDashboardUser });
+  const newUser = new User({
+    username,
+    name,
+    email,
+    password: hashedPassword,
+    role: userRole,
+    is_dashboard_user: isDashboardUser,
+  });
   await newUser.save();
 
   return { message: "User registered successfully." };
@@ -37,28 +43,26 @@ async function signUp(req) {
 
 async function login(req) {
   const { identifier, password } = req.body; // Identifier could be email or username
+  const isEmail = (identifier) => /\S+@\S+\.\S+/.test(identifier);
 
   let user;
 
-  // Determine if identifier is an email or username
+  // Check if the identifier is an email
   if (isEmail(identifier)) {
     user = await User.findOne({ email: identifier });
   } else {
     user = await User.findOne({ username: identifier });
   }
 
-  // Check if user exists
   if (!user) {
     throw new Error("User not found");
   }
 
-  // Validate password
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new Error("Invalid password");
   }
 
-  // Create JWT token (exclude password in payload)
   const token = jwt.sign(
     {
       id: user._id,
@@ -155,7 +159,7 @@ function encrypt(text) {
   });
 }
 
-async function resetPasswordRequest(req) { }
+async function resetPasswordRequest(req) {}
 
 function decrypt(encrypted) {
   const iv = enc.Hex.parse("00000000000000000000000000000000");
