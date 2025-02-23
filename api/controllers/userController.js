@@ -45,6 +45,21 @@ class UserController {
       next(error);
     }
   }
+  static async deleteDashboardUser(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const result = await UserService.deleteDashboardUser(id);
+
+      if (!result) {
+        return res.status(404).json({ message: "Admin dashboard user not found" });
+      }
+
+      res.json({ message: "Admin dashboard user deleted successfully" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = UserController;

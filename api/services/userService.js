@@ -47,9 +47,18 @@ async function updateDashboardUser(userId, updateData) {
   return updatedUser;
 }
 
+async function deleteDashboardUser(userId) {
+  const result = await User.findOneAndDelete({
+    _id: userId,
+    is_dashboard_user: true, // Ensure only dashboard users can be deleted
+  });
+
+  return result;
+}
 module.exports = {
   getPlatformUsers,
   deletePlatformUser,
   getAdminDashboardUsers,
   updateDashboardUser,
+  deleteDashboardUser,
 };
