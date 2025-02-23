@@ -28,6 +28,23 @@ class UserController {
       next(error);
     }
   }
+
+  static async updateDashboardUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { username, password, role, email } = req.body;
+
+      const result = await UserService.updateDashboardUser(id, { username, password, role, email });
+
+      if (!result) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json({ message: "User updated successfully", user: result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = UserController;

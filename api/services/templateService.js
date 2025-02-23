@@ -27,7 +27,7 @@ async function getTemplatesByUserId(req) {
   const userId = req.params.userId;
   const templates = await Template.find({
     createdBy: new mongoose.Types.ObjectId(userId),
-  }).sort({ createdBy: -1 })
+  }).sort({ createdBy: -1 });
   return templates;
 }
 const getAllTemplatesSorted = async () => {
@@ -42,8 +42,29 @@ const getAllTemplatesSorted = async () => {
           },
         },
       },
-      { $sort: { statusOrder: 1, createdAt: -1 } }, // Sort by custom order, then newest first
-      { $project: { statusOrder: 0 } }, // Remove the temporary field
+      {
+        $sort: { statusOrder: 1, createdAt: -1 },
+      }, // Sort by custom order, then newest first
+      {
+        $lookup: {
+          from: "users", // The collection name for Users in MongoDB
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdByDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$createdByDetails",
+          preserveNullAndEmptyArrays: true, // Keeps templates even if user details are missing
+        },
+      },
+      {
+        $project: {
+          statusOrder: 0, // Remove the temporary field
+          "createdByDetails.password": 0, // Exclude sensitive fields like password
+        },
+      },
     ]);
 
     return templates;
@@ -52,6 +73,7 @@ const getAllTemplatesSorted = async () => {
     throw error;
   }
 };
+
 async function updateTemplate(req) {
   const { templateId, details } = req.body;
   const updatedTemplate = await Template.findByIdAndUpdate(
@@ -175,5 +197,5 @@ module.exports = {
   deleteResearch,
   getTemplatesByUserId,
   updateTemplateStatus,
-  getAllTemplatesSorted
+  getAllTemplatesSorted,
 };
