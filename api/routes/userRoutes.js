@@ -8,5 +8,6 @@ router.delete("/delete-platform-user/:id", apiLimiter, UserController.deletePlat
 router.get("/get-admin-dashboard-users", apiLimiter, UserController.getAdminDashboardUsers);
 router.put("/update-dashboard-user/:id", apiLimiter, UserController.updateDashboardUser);
 router.delete("/delete-dashboard-user/:id", apiLimiter, UserController.deleteDashboardUser);
+router.post("/create-dashboard-user", UserController.createDashboardUser);
 
 module.exports = router;
