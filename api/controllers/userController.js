@@ -60,6 +60,38 @@ class UserController {
       next(error);
     }
   }
+  static async createDashboardUser(req, res, next) {
+    try {
+      const { username, password, role, email, name } = req.body;
+
+      // Validate required fields
+      if (!username || !password || !role || !email || !name) {
+        return res.status(400).json({ message: "All fields are required" });
+      }
+
+      // Check if the role is valid
+      const validRoles = ["ADMIN", "SUPER_ADMIN"];
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({ message: "Invalid role provided" });
+      }
+
+      const result = await UserService.createDashboardUser({
+        username,
+        password,
+        role,
+        email,
+        name,
+      });
+
+      if (!result) {
+        return res.status(400).json({ message: "Failed to create user" });
+      }
+
+      res.status(201).json({ message: "User created successfully", user: result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = UserController;

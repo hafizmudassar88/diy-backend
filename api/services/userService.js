@@ -55,7 +55,35 @@ async function deleteDashboardUser(userId) {
 
   return result;
 }
+async function createDashboardUser(userData) {
+  const { username, password, role, email, name } = userData;
+
+  // Check if the user already exists
+  const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+  if (existingUser) {
+    throw new Error("Username or email already exists");
+  }
+
+  // Hash the password before saving
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  // Create the user
+  const newUser = new User({
+    username,
+    password: hashedPassword,
+    role,
+    email,
+    name,
+    is_dashboard_user: true, // Set it as a dashboard user
+  });
+
+  await newUser.save();
+  return newUser;
+}
+
 module.exports = {
+  createDashboardUser,
   getPlatformUsers,
   deletePlatformUser,
   getAdminDashboardUsers,
