@@ -7,8 +7,7 @@ const apiLimiter = rateLimit({
     status: 429,
     error: "Too many requests, please try again later.",
   },
-  headers: true,
-  keyGenerator: (req) => req.ip,
+
 });
 
 module.exports = apiLimiter;
