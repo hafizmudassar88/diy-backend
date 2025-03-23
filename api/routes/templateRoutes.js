@@ -1,15 +1,16 @@
 const express = require("express");
 const templateController = require("../controllers/templateController");
 const authMiddleware = require("../middleware/authMiddleware");
+const apiLimiter = require("../middlewares/rateLimiter");
 
 const router = express.Router();
 
-router.post("/create", authMiddleware, templateController.createTemplate);
+router.post("/create", authMiddleware, apiLimiter, templateController.createTemplate);
 router.get("/mine", authMiddleware, templateController.getTemplatesOfMine);
 router.get("/all-sorted", authMiddleware, templateController.getAllTemplatesSorted);
-router.put("/update", authMiddleware, templateController.updateTemplate);
-router.put("/update/status", authMiddleware, templateController.updateTemplateStatus);
-router.delete("/delete", authMiddleware, templateController.deleteTemplate);
+router.put("/update", authMiddleware, apiLimiter, templateController.updateTemplate);
+router.put("/update/status", authMiddleware, apiLimiter, templateController.updateTemplateStatus);
+router.delete("/delete", authMiddleware, apiLimiter, templateController.deleteTemplate);
 router.get("/user/:userId", templateController.getTemplatesByUserId);
 router.get("/:templateId", templateController.getTemplate);
 
