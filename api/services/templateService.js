@@ -3,7 +3,12 @@ const Template = require("../schema/template.schema");
 
 async function createTemplate(req) {
   const { details } = req.body;
-  const template = new Template({ details, createdBy: req.user.id });
+  let status = 'PENDING';
+  if (details?.type === "resume" || details?.type === "RESUME") {
+    status = 'APPROVED';
+
+  }
+  const template = new Template({ details, createdBy: req.user.id, status });
   const savedTemplate = await template.save();
   return savedTemplate;
 }
